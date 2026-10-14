@@ -42,9 +42,10 @@ Or approve it in Settings → Plugins, where **Ask AI to review** reads it first
 
 - Saves your reminders in SUPER DESKTOP's plugin values
   (`~/.local/state/super-desktop/plugins/reminder.data.json`).
-- Shows notifications through SUPER DESKTOP (`notify-send`).
-- Plays `ding-dong.wav` from its own folder with `pw-play`, else `paplay`,
-  else `aplay`.
+- Shows notifications through SUPER DESKTOP (`notify-send`); clicking one
+  shows SUPER DESKTOP with the list.
+- Plays `ding-dong.wav` from its own folder through SUPER DESKTOP's
+  `sound.play`.
 - Nothing else: no network, no other files, no other programs.
 
 ## Change it

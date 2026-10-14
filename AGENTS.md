@@ -25,8 +25,9 @@ them (a saved list is a Qt list, not a JS array) and picks text colors that
 keep a 4.5:1 contrast in every Omarchy theme.
 
 The bell checks every 5 s. A due reminder gets `fired: true, seen: false`: a
-notification, `ding-dong.wav` (made by `tools/make-ding-dong.py`) through
-pw-play/paplay/aplay, again every minute up to 5 times, and the bell shakes
-over a moving gradient until it is clicked (`seen: true`).
+notification (critical; a click on it shows the list), `ding-dong.wav` (made
+by `tools/make-ding-dong.py`) through `sound.play`, again every minute up to 5
+times, and the bell shakes over a moving gradient until it is clicked
+(`seen: true`).
 
 Needs SUPER DESKTOP 1.6.0 or newer (the `popup` slot and `tooltip`).

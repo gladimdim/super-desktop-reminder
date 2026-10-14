@@ -22,18 +22,19 @@ Rectangle {
     property int dings: 0
 
     readonly property int maxDings: 5
-    readonly property string sound: sd.pluginDir + "/ding-dong.wav"
 
     Connections {
         target: sd
         function onVisibleChanged(visible) { root.shown = visible }
     }
 
+    // Plays ding-dong.wav, else the desktop's alarm
+    // sound. SUPER DESKTOP picks the player; check and snapshot stay quiet.
     function ding() {
-        if (!sd.connected) return
         root.dings += 1
-        sd.exec(["sh", "-c", "pw-play \"$1\" 2>/dev/null || paplay \"$1\" 2>/dev/null || aplay -q \"$1\"", "sh", root.sound],
-                function(r) { if (r.code !== 0) sd.log("could not play the sound: " + r.stderr) })
+        sd.call("sound.play", { file: "ding-dong.wav" }, function(result, err) {
+            if (err) sd.call("sound.play", { name: "alarm-clock-elapsed" })
+        })
     }
 
     function checkDue() {
@@ -50,8 +51,11 @@ Rectangle {
         sd.setValue("reminders", all)
         for (var j = 0; j < fired.length; j++) {
             const body = fired[j]
-            sd.call("notify", { title: "⏰ Reminder", body: body }, function(result, err) {
-                if (err) sd.run(["notify-send", "-u", "critical", "⏰ Reminder", body])
+            // Stays until dismissed; a click on it brings up the list.
+            sd.call("notify", { title: "⏰ Reminder", body: body, urgency: "critical",
+                                actions: [{ id: "default", label: "Show" }] }, function(result, err) {
+                if (result && result.action === "default")
+                    sd.call("overlay.show", {}, function() { sd.call("popup.open", { surface: "list" }) })
             })
         }
         root.dings = 0
@@ -63,6 +67,7 @@ Rectangle {
         sd.setValue("reminders", R.list(sd.values).map(r => r.fired ? Object.assign({}, r, { seen: true }) : r))
     }
 
+    // Reminders are due while SUPER DESKTOP is hidden too. sd-lint: ignore hidden-timer
     Timer {
         interval: 5000; running: true; repeat: true; triggeredOnStart: true
         onTriggered: root.checkDue()
