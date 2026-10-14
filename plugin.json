@@ -3,6 +3,7 @@
   "name": "Reminder",
   "description": "A bell in the top bar: click it to add a reminder (when and what), right-click it to see and remove them. When one is due it notifies, plays a ding-dong and the bell shakes until clicked.",
   "version": "1.0.0",
+  "minHost": "1.6.0",
   "categories": ["productivity", "time"],
   "api": 1,
   "surfaces": [
